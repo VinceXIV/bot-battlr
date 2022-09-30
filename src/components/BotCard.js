@@ -9,13 +9,26 @@ const botTypeClasses = {
   Captain: "icon star",
 };
 
-function BotCard({ bot }) {
+function BotCard({ bot, enlistedBots, setEnlistedBots }) {
+
+  function botAlreadyEnlisted(bot){
+    return Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
+  }
+
+  function toggleEnlistedState(event){
+    if(!botAlreadyEnlisted(bot)){
+      setEnlistedBots([...enlistedBots, bot])
+    }else {
+      setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== bot.id))
+    }
+  }
+
   return (
     <div className="ui column">
       <div
         className="ui card"
         key={bot.id}
-        onClick={() => console.log("add code to connect event listener")}
+        onClick={toggleEnlistedState}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />

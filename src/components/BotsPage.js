@@ -5,11 +5,12 @@ import BotCollection from "./BotCollection";
 function BotsPage() {
   //start here with your code for step one
   const [enlistedBots, setEnlistedBots] = useState([])
+  const [allBots, setAllBots] = useState([])
 
   return (
     <div>
-      <YourBotArmy />
-      <BotCollection enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>
+      <YourBotArmy enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>
+      <BotCollection allBots={allBots} setAllBots={setAllBots} enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>
     </div>
   )
 }

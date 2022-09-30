@@ -1,24 +1,26 @@
 import React, {useEffect, useState} from "react";
 import BotCard from "./BotCard";
 
-function BotCollection({enlistedBots, setEnlistedBots}) {
+function BotCollection({allBots, setAllBots, enlistedBots, setEnlistedBots}) {
   // Your code here
-  const [allBots, setAllBots] = useState(<h1>Loading...</h1>)
+  let botList;
 
   useEffect(()=>{
     fetch("http://localhost:8002/bots")
     .then(result => result.json())
-    .then(botList => {
-      const bots = botList.map(bot => <BotCard bot={bot} enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>)
-      setAllBots(bots)
-    })
+    .then(data => setAllBots(data))
   }, [])
 
+  if(!allBots){
+    botList = <h1>Loading...</h1>
+  }else {
+    botList = allBots.map(bot => <BotCard key={bot.id} bot={bot} enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>)
+  }
 
   return (
     <div className="ui four column grid">
       <div className="row">
-        {allBots}
+        {botList}
       </div>
     </div>
   );
