@@ -9,26 +9,13 @@ const botTypeClasses = {
   Captain: "icon star",
 };
 
-function BotCard({ bot, enlistedBots, setEnlistedBots }) {
-
-  function botAlreadyEnlisted(bot){
-    return Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
-  }
-
-  function toggleEnlistedState(event){
-    if(!botAlreadyEnlisted(bot)){
-      setEnlistedBots([...enlistedBots, bot])
-    }else {
-      setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== bot.id))
-    }
-  }
-
+function BotCard({ bot, handleBotAction }) {
   return (
     <div className="ui column">
       <div
         className="ui card"
         key={bot.id}
-        onClick={toggleEnlistedState}
+        onClick={() => handleBotAction(bot, "toggle-listing")}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />
