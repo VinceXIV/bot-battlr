@@ -11,11 +11,15 @@ const botTypeClasses = {
 
 function BotCard({ bot, enlistedBots, setEnlistedBots }) {
 
-  function handleEnlistClick(event){
-    const botAlreadyEnlisted = Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
+  function botAlreadyEnlisted(bot){
+    return Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
+  }
 
-    if(!botAlreadyEnlisted){
+  function toggleEnlistedState(event){
+    if(!botAlreadyEnlisted(bot)){
       setEnlistedBots([...enlistedBots, bot])
+    }else {
+      setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== bot.id))
     }
   }
 
@@ -24,7 +28,7 @@ function BotCard({ bot, enlistedBots, setEnlistedBots }) {
       <div
         className="ui card"
         key={bot.id}
-        onClick={handleEnlistClick}
+        onClick={toggleEnlistedState}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />

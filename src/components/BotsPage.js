@@ -9,7 +9,7 @@ function BotsPage() {
 
   return (
     <div>
-      <YourBotArmy enlistedBots={enlistedBots}/>
+      <YourBotArmy enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>
       <BotCollection allBots={allBots} setAllBots={setAllBots} enlistedBots={enlistedBots} setEnlistedBots={setEnlistedBots}/>
     </div>
   )
