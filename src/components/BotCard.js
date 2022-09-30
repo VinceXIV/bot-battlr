@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useContext} from "react";
+import { botInfoContext } from "./botInfo";
 
 const botTypeClasses = {
   Assault: "icon military",
@@ -10,12 +11,22 @@ const botTypeClasses = {
 };
 
 function BotCard({ bot }) {
+  const {enlistedBots, setEnlistedBots} = useContext(botInfoContext)
+  
+  function handleClick(event){
+    const botAlreadyEnlisted = enlistedBots.find(enlistedBot => enlistedBot.id === bot.id)
+
+    if(!botAlreadyEnlisted){
+      setEnlistedBots([...enlistedBots, bot])
+    }
+  }
+
   return (
     <div className="ui column">
       <div
         className="ui card"
         key={bot.id}
-        onClick={() => console.log("add code to connect event listener")}
+        onClick={handleClick}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />

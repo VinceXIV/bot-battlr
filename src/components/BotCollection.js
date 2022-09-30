@@ -1,5 +1,5 @@
 import React, {useEffect, useContext} from "react";
-import {botInfoContext, BotInformationProvider} from './botInfo'
+import {botInfoContext} from './botInfo'
 import BotCard from "./BotCard";
 
 function BotCollection() {
@@ -10,7 +10,7 @@ function BotCollection() {
     fetch("http://localhost:8002/bots")
     .then(result => result.json())
     .then(botList => {
-      const bots = botList.map(bot => <BotCard bot={bot}/>)
+      const bots = botList.map(bot => <BotCard key={bot.id} bot={bot}/>)
       setAllBots(bots)
     })
   }, [])
