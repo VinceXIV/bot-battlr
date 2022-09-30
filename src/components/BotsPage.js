@@ -14,25 +14,50 @@ function BotsPage() {
     .then(data => setAllBots(data))
   }, [])
 
+
   function botAlreadyEnlisted(bot){
     return Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
   }
 
+
+  function removeBotFromDatabase(botToDelete){
+    fetch(`http://localhost:8002/bots/${botToDelete.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(result => result.json())
+    .then(() => {
+      setAllBots(allBots.filter(currentBot => currentBot.id !== botToDelete.id))
+      setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== botToDelete.id))
+    })
+  }
+
+
   function handleBotAction(bot, action){
     switch(action){
+      case "release-bot":
+        removeBotFromDatabase(bot)   
+        break;
+             
       case "toggle-listing":
         if(!botAlreadyEnlisted(bot)){
           setEnlistedBots([...enlistedBots, bot])
         }else {
           setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== bot.id))
         }
-        break;        
+        break;
+
     }
   }
+
 
   function getBotList(botsArray){
     return botsArray.map(bot => <BotCard key={bot.id} bot={bot} handleBotAction={handleBotAction}/>)
   }
+
 
   return (
     <div>
