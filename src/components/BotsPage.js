@@ -2,11 +2,13 @@ import React, {useEffect, useState} from "react";
 import YourBotArmy from "./YourBotArmy";
 import BotCollection from "./BotCollection";
 import BotCard from "./BotCard"
+import BotSpecs from "./BotSpecs";
 
 function BotsPage() {
   //start here with your code for step one
-  const [enlistedBots, setEnlistedBots] = useState([])
   const [allBots, setAllBots] = useState([])
+  const [enlistedBots, setEnlistedBots] = useState([])
+  const [botSpecs, setBotSpecs] = useState(null)
 
   useEffect(()=>{
     fetch("http://localhost:8002/bots")
@@ -41,13 +43,21 @@ function BotsPage() {
       case "release-bot":
         removeBotFromDatabase(bot)   
         break;
-             
-      case "toggle-listing":
+
+      case "enlist-bot":
         if(!botAlreadyEnlisted(bot)){
           setEnlistedBots([...enlistedBots, bot])
         }else {
-          setEnlistedBots(enlistedBots.filter(enlistedBot => enlistedBot.id !== bot.id))
-        }     
+          alert(`${bot.name} has already been enlisted`)
+        }
+        break;
+        
+      case "show-all-bots":
+        setBotSpecs(null)
+        break;
+        
+      case "show-bot-specs":
+        setBotSpecs(bot)
     }
   }
 
@@ -56,11 +66,11 @@ function BotsPage() {
     return botsArray.map(bot => <BotCard key={bot.id} bot={bot} handleBotAction={handleBotAction}/>)
   }
 
-  
+
   return (
     <div>
       <YourBotArmy enlistedBots={getBotList(enlistedBots)}/>
-      <BotCollection allBots={getBotList(allBots)}/>
+      {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} /> : <BotCollection allBots={getBotList(allBots)}/>}
     </div>
   )
 }

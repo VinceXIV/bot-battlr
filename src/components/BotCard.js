@@ -15,7 +15,7 @@ function BotCard({ bot, handleBotAction }) {
       <div
         className="ui card"
         key={bot.id}
-        onClick={()=>handleBotAction(bot, 'toggle-listing')}
+        onClick={()=>handleBotAction(bot, 'show-bot-specs')}
       >
         <div className="image">
           <img alt="oh no!" src={bot.avatar_url} />
