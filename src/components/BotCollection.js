@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useContext} from "react";
+import {botInfoContext, BotInformationProvider} from './botInfo'
 import BotCard from "./BotCard";
 
 function BotCollection() {
-  // Your code here
-  const [allBots, setAllBots] = useState(<h1>Loading...</h1>)
-  const [enlistedBots, setEnlistedBots] = useState([])
+  // Your code here  
+  const {allBots, setAllBots} = useContext(botInfoContext)
 
   useEffect(()=>{
     fetch("http://localhost:8002/bots")
