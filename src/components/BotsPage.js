@@ -51,6 +51,7 @@ function BotsPage() {
       case "enlist-bot":
         if(!botAlreadyEnlisted(bot)){
           setEnlistedBots([...enlistedBots, bot])
+          setAllBots(allBots.filter(currentBot => currentBot.id !== bot.id))
         }else {
           alert(`${bot.name} has already been enlisted`)
         }
