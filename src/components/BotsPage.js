@@ -1,14 +1,18 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import YourBotArmy from "./YourBotArmy";
 import BotCollection from "./BotCollection";
 import BotCard from "./BotCard"
 import BotSpecs from "./BotSpecs";
+import SortBar from "./SortBar";
 
 function BotsPage() {
   //start here with your code for step one
   const [allBots, setAllBots] = useState([])
   const [enlistedBots, setEnlistedBots] = useState([])
   const [botSpecs, setBotSpecs] = useState(null)
+  const [showSortBar, setShowSortBar] = useState(true)
+  const sortStrategy = useRef({ health: 1, damage: 1, armor: 1 })
+
 
   useEffect(()=>{
     fetch("http://localhost:8002/bots")
@@ -54,10 +58,12 @@ function BotsPage() {
         
       case "show-all-bots":
         setBotSpecs(null)
+        setShowSortBar(true)
         break;
         
       case "show-bot-specs":
         setBotSpecs(bot)
+        setShowSortBar(false)
     }
   }
 
@@ -67,9 +73,35 @@ function BotsPage() {
   }
 
 
+  function sortBots(data, sortBy){
+    data.sort((a, b) => {
+      if(a[sortBy] > b[sortBy]){
+        return sortStrategy.current[sortBy] * 1
+      }else if(a[sortBy] < b[sortBy]){
+        return sortStrategy.current[sortBy] * -1
+      } else {
+        return 0
+      }
+    })
+
+    return data
+  }
+
+
+  function updateSortStrategy(sortBy){
+    sortStrategy.current[sortBy] *= -1 //if it was ascending, make it descending and vice versa
+  }
+
+  
+  function handleSortAction(sortBy){
+    updateSortStrategy(sortBy)
+    setAllBots(sortBots([...allBots], sortBy))
+  }
+
   return (
     <div>
       <YourBotArmy enlistedBots={getBotList(enlistedBots)}/>
+      {showSortBar ? <SortBar handleSortAction={handleSortAction}/> : <div></div>}
       {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} /> : <BotCollection allBots={getBotList(allBots)}/>}
     </div>
   )
