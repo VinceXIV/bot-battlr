@@ -25,6 +25,11 @@ function BotsPage() {
   }, [])
 
 
+  function getEnlistedBotOfSameClass(bot){
+    return enlistedBots.find(enlistedBot => enlistedBot.bot_class === bot.bot_class)
+  }
+
+
   function botAlreadyEnlisted(bot){
     return Boolean(enlistedBots.find(enlistedBot => enlistedBot.id === bot.id))
   }
@@ -53,13 +58,18 @@ function BotsPage() {
         break;
 
       case "enlist-bot":
-        setEnlistedBots([...enlistedBots, bot])
-        setAllBots(allBots.filter(currentBot => currentBot.id !== bot.id))
+        const enlistedBotOfSameClass = getEnlistedBotOfSameClass(bot)
+        if(!enlistedBotOfSameClass){
+          setEnlistedBots([...enlistedBots, bot])
+          setFilteredBots(filteredBots.filter(currentBot => currentBot.id !== bot.id))
+        }else{
+          alert(`Uh-Oh!\nThe ${bot.bot_class} role has already been filled\n${enlistedBotOfSameClass.name} is currently doing that`)
+        }
         break;
 
       case "delist-bot":
         setEnlistedBots(enlistedBots.filter(currentBot => currentBot.id !== bot.id))
-        setAllBots([...allBots, bot])
+        setFilteredBots([...filteredBots, bot])
         break;
         
       case "show-all-bots":
@@ -114,7 +124,10 @@ function BotsPage() {
 
 
   function handleFilterAction(filterBy){
-    setFilteredBots(allBots.filter(bot => bot.bot_class === capitalizeFirstLetter(filterBy)))
+    setFilteredBots(allBots.filter(
+      bot => bot.bot_class === capitalizeFirstLetter(filterBy)
+    ).filter(filteredBot => !botAlreadyEnlisted(filteredBot))
+    )
   }
 
   return (
