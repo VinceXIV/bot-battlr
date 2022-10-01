@@ -8,6 +8,7 @@ import SortBar from "./SortBar";
 function BotsPage() {
   //start here with your code for step one
   const [allBots, setAllBots] = useState([])
+  const [filteredBots, setFilteredBots] = useState([])
   const [enlistedBots, setEnlistedBots] = useState([])
   const [botSpecs, setBotSpecs] = useState(null)
   const [showSortBar, setShowSortBar] = useState(true)
@@ -17,7 +18,10 @@ function BotsPage() {
   useEffect(()=>{
     fetch("http://localhost:8002/bots")
     .then(result => result.json())
-    .then(data => setAllBots(data))
+    .then(data => {
+      setAllBots(data)
+      setFilteredBots(data)
+    })
   }, [])
 
 
@@ -100,11 +104,24 @@ function BotsPage() {
     setAllBots(sortBots([...allBots], sortBy))
   }
 
+
+  function capitalizeFirstLetter(string){
+    const firstLetterCapitalized = string[0].toUpperCase()
+    const restOfLetters = string.split("").slice(1).join("")
+    
+    return firstLetterCapitalized + restOfLetters
+  }
+
+
+  function handleFilterAction(filterBy){
+    setFilteredBots(allBots.filter(bot => bot.bot_class === capitalizeFirstLetter(filterBy)))
+  }
+
   return (
     <div>
       <YourBotArmy enlistedBots={getBotList(enlistedBots)}/>
-      {showSortBar ? <SortBar handleSortAction={handleSortAction}/> : <div></div>}
-      {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} botAlreadyEnlisted={botAlreadyEnlisted(botSpecs)}/> : <BotCollection allBots={getBotList(allBots)}/>}
+      {showSortBar ? <SortBar handleSortAction={handleSortAction} handleFilterAction={handleFilterAction}/> : <div></div>}
+      {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} botAlreadyEnlisted={botAlreadyEnlisted(botSpecs)}/> : <BotCollection filteredBots={getBotList(filteredBots)}/>}
     </div>
   )
 }

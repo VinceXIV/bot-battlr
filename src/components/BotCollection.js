@@ -1,10 +1,10 @@
 import React from "react";
 
-function BotCollection({allBots}) {
+function BotCollection({filteredBots}) {
   return (
     <div className="ui four column grid">
       <div className="row">
-        {allBots}
+        {filteredBots}
       </div>
     </div>
   );
