@@ -49,12 +49,13 @@ function BotsPage() {
         break;
 
       case "enlist-bot":
-        if(!botAlreadyEnlisted(bot)){
-          setEnlistedBots([...enlistedBots, bot])
-          setAllBots(allBots.filter(currentBot => currentBot.id !== bot.id))
-        }else {
-          alert(`${bot.name} has already been enlisted`)
-        }
+        setEnlistedBots([...enlistedBots, bot])
+        setAllBots(allBots.filter(currentBot => currentBot.id !== bot.id))
+        break;
+
+      case "delist-bot":
+        setEnlistedBots(enlistedBots.filter(currentBot => currentBot.id !== bot.id))
+        setAllBots([...allBots, bot])
         break;
         
       case "show-all-bots":
@@ -103,7 +104,7 @@ function BotsPage() {
     <div>
       <YourBotArmy enlistedBots={getBotList(enlistedBots)}/>
       {showSortBar ? <SortBar handleSortAction={handleSortAction}/> : <div></div>}
-      {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} /> : <BotCollection allBots={getBotList(allBots)}/>}
+      {botSpecs ? <BotSpecs bot={botSpecs} handleBotAction={handleBotAction} botAlreadyEnlisted={botAlreadyEnlisted(botSpecs)}/> : <BotCollection allBots={getBotList(allBots)}/>}
     </div>
   )
 }

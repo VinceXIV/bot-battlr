@@ -9,7 +9,7 @@ const botTypeClasses = {
   Captain: "icon star",
 };
 
-function BotSpecs({ bot, handleBotAction }) {
+function BotSpecs({ bot, handleBotAction, botAlreadyEnlisted }) {
   return (
     <div className="ui segment">
       <div className="ui two column centered grid">
@@ -60,11 +60,10 @@ function BotSpecs({ bot, handleBotAction }) {
             </button>
             <button
               className="ui button fluid"
-              onClick={() =>
-                handleBotAction(bot, "enlist-bot")
+              onClick={() => botAlreadyEnlisted ? handleBotAction(bot, "delist-bot") : handleBotAction(bot, "enlist-bot")
               }
             >
-              Enlist
+              {botAlreadyEnlisted ? "Delist" : "Enlist" }
             </button>
           </div>
         </div>
