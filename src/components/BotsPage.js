@@ -101,7 +101,7 @@ function BotsPage() {
   
   function handleSortAction(sortBy){
     updateSortStrategy(sortBy)
-    setAllBots(sortBots([...allBots], sortBy))
+    setFilteredBots(sortBots([...filteredBots], sortBy))
   }
 
 
