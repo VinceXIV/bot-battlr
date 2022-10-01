@@ -13,6 +13,7 @@ function BotsPage() {
   const [botSpecs, setBotSpecs] = useState(null)
   const [showSortBar, setShowSortBar] = useState(true)
   const sortStrategy = useRef({ health: 1, damage: 1, armor: 1 })
+  const currentlyFilteringBy = useRef({support: false, medic: false, assault: false, defender: false, captain: false, witch: false})
 
 
   useEffect(()=>{
@@ -124,10 +125,31 @@ function BotsPage() {
 
 
   function handleFilterAction(filterBy){
-    setFilteredBots(allBots.filter(
-      bot => bot.bot_class === capitalizeFirstLetter(filterBy)
-    ).filter(filteredBot => !botAlreadyEnlisted(filteredBot))
-    )
+    if(filteredBots == allBots){
+      setFilteredBots(allBots.filter(
+        bot => bot.bot_class === capitalizeFirstLetter(filterBy)
+      ).filter(filteredBot => !botAlreadyEnlisted(filteredBot)))
+      currentlyFilteringBy.current[filterBy] = true
+
+    }else if(currentlyFilteringBy.current[filterBy]){
+      const newFilteredBots = filteredBots.filter(bot => bot.bot_class !== capitalizeFirstLetter(filterBy))
+      if(!newFilteredBots.length){
+        setFilteredBots(allBots)
+      }else{
+        setFilteredBots(newFilteredBots)
+      }
+      currentlyFilteringBy.current[filterBy] = false
+
+    }else if(!currentlyFilteringBy.current[filterBy]) {
+      const additionalBots = allBots.filter(
+        bot => bot.bot_class === capitalizeFirstLetter(filterBy)
+      ).filter(filteredBot => !botAlreadyEnlisted(filteredBot))
+
+      setFilteredBots([...filteredBots,...additionalBots])
+      currentlyFilteringBy.current[filterBy] = true
+    }
+
+    return currentlyFilteringBy.current
   }
 
   return (

@@ -1,20 +1,24 @@
-import React from 'react'
+import React, {useRef} from 'react'
 
 function SortBar({handleSortAction, handleFilterAction}){
+    const moreInfo = useRef({showMoreInfo: true, moreInfo: <p style={{fontSize: "0.7rem", textAlign: "left", paddingLeft: "0.2rem", color: "red"}}>
+        Currently showing all bots. Click on an item to specify the bots you want to see</p>})
 
     const parentDivStyle = {
         display: "flex",
+        flexDirection: "column",
         justifyContent:"left",
         alignItems: "start",
         width: "100vw",
-        height: "10rem",
+        minHeight: "10rem",
         backgroundColor: "rgba(0, 0, 0, 0.10)",
-        marginBottom: "2rem"
+        marginBottom: "2rem",
+        paddingBottom: "2rem"
     }
 
     const sortOptionStyle = {
         paddingLeft: "2rem",
-        paddingRight: "2rem",
+        paddingRight: "1rem",
         paddingBottom: "0",
         marginBottom: '0',
         fontSize: "1.7rem",
@@ -31,13 +35,32 @@ function SortBar({handleSortAction, handleFilterAction}){
     }
 
 
+    function currentlyFilteringByNone(currentlyFilteringBy){
+        console.log("currently filtering by: ", currentlyFilteringBy)
+        for(const key in currentlyFilteringBy){
+            if(currentlyFilteringBy[key]){
+                return false
+            }
+        }
+        
+        return true
+    }
+
+
     function handleClick(event, action, strategy){
-        unstyleSiblings(event.target)
-        event.target.style.color = "#8db600"
         if(action === 'sort'){
+            unstyleSiblings(event.target)
             handleSortAction(strategy)
+            event.target.style.color = "#8db600"
         }else if (action === 'filter'){
-            handleFilterAction(strategy)
+            const currentlyFilteringBy = handleFilterAction(strategy)
+            currentlyFilteringByNone(currentlyFilteringBy) ? moreInfo.current.showMoreInfo = true : moreInfo.current.showMoreInfo = false
+
+            if(!currentlyFilteringBy[strategy]){
+                event.target.style.color = "rgba(0, 0, 0, 0.6)"
+            }else{
+                event.target.style.color = "#8db600"
+            }
         }
     }
 
@@ -61,7 +84,7 @@ function SortBar({handleSortAction, handleFilterAction}){
                         {createOptionList(["Health", "Damage", "Armor"], "sort")}
                     </div>
                 </fieldset>
-                <p style={{fontSize: "0.7rem", textAlign: "center"}}>Clicking will toggle between sorting in ascending or descending order based on the item clicked</p>
+                <p style={{fontSize: "0.7rem", textAlign: "left", paddingLeft: "0.2rem"}}>Clicking will toggle between sorting in ascending or descending order</p>
             </div>
 
             <div style={{marginLeft: "2rem", paddingTop: "1.5rem"}}>
@@ -71,6 +94,8 @@ function SortBar({handleSortAction, handleFilterAction}){
                         {createOptionList(["Support", "Medic", "Assault", "Defender", "Captain", "Witch"], "filter")}
                     </div>                    
                 </fieldset>
+                <p style={{fontSize: "0.7rem", textAlign: "left", paddingLeft: "0.2rem"}}>Clicking will toggle between adding the bots in that class to the filtered list or not. All non-enlisted bots whose class are selected (in green) are shown in the list below</p>
+                {moreInfo.current.showMoreInfo ? moreInfo.current.moreInfo : <></>}
             </div>
         </div>
     )
